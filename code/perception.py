@@ -5,7 +5,8 @@ import matplotlib.pyplot as plt
 
 # Identify pixels above the threshold
 # Threshold of RGB > 160 does a nice job of identifying ground pixels only
-def color_thresh(img, rgb_thresh=(160, 160, 160)):
+
+def color_thresh(img, rgb_thresh=(175, 175, 150)):
     # Create an array of zeros same xy size as img, but single channel
     color_select = np.zeros_like(img[:,:,0])
     color_select1 = np.zeros_like(img[:,:,0])
@@ -16,18 +17,16 @@ def color_thresh(img, rgb_thresh=(160, 160, 160)):
     above_thresh = (img[:,:,0] > rgb_thresh[0]) \
                 & (img[:,:,1] > rgb_thresh[1]) \
                 & (img[:,:,2] > rgb_thresh[2])
-    all_thresh = (img[:,:,0] > 0) \
-                & (img[:,:,1] > 0) \
-                & (img[:,:,2] > 0)
-    all_thresh=~all_thresh 
-    #obstacles
-    
+    all_thresh = (img[:,:,0] >= 0) \
+                & (img[:,:,1] >= 0) \
+                & (img[:,:,2] >= 0)
+    obst = all_thresh-above_thresh
     # Index the array of zeros with the boolean array and set to 1
     color_select[above_thresh] = 1
-    color_select1[all_thresh] = 0
-    color_select_obst = color_select1-color_select
+    color_select1[obst] = 1
     # Return the binary image
-    return color_select, color_select_obst
+    
+    return color_select, color_select1
 def color_threshr(img, rgb_thresh=(160, 160, 160)):
     # Create an array of zeros same xy size as img, but single channel
     color_select = np.zeros_like(img[:,:,0])
@@ -218,3 +217,4 @@ def perception_step(Rover):
     
     
     return Rover
+
