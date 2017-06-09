@@ -20,6 +20,7 @@ def color_thresh(img, rgb_thresh=(175, 175, 150)):
     all_thresh = (img[:,:,0] > 0) \
                 & (img[:,:,1] >= 0) \
                 & (img[:,:,2] >= 0)
+    # Find obstacles by taking all viewable area and subtracting the navigable
     obst = all_thresh-above_thresh
     
     # Index the array of zeros with the boolean array and set to 1
@@ -112,8 +113,6 @@ def perspect_transform(img, src, dst):
 def perception_step(Rover):
     image = Rover.img
     # Perform perception steps to update Rover()
-    # TODO: 
-    # NOTE: camera image is coming to you in Rover.img
     # 1) Define source and destination points for perspective transform
     bottom_offset = 6
     dst_size = 5
@@ -140,9 +139,6 @@ def perception_step(Rover):
     # 2) Apply perspective transform
     warped = perspect_transform(image, source, destination)
     # 3) Apply color threshold to identify navigable terrain/obstacles/rock samples
-##    if (Rover.pitch >3 and Rover.pitch < 355) or (Rover.roll>3 and Rover.roll<357):
-##        rgb_thresh=(240, 240, 240)
-##    else:
     rgb_thresh=(160, 160, 160)    
     threshed, obst = color_thresh(warped, rgb_thresh)
     # 4) Update Rover.vision_image (this will be displayed on left side of screen)
@@ -174,8 +170,7 @@ def perception_step(Rover):
                                 ypos, yaw, 
                                 Rover.ground_truth.shape[0], 15)
     # 7) Update Rover worldmap (to be displayed on right side of screen)
-        # Rover.worldmap[obstacle_y_world, obstacle_x_world, 0] += 1
-        #          Rover.worldmap[rock_y_world, rock_x_world, 1] += 1
+    # show zeros matrix when pitch excedes allowable threshold
     if (1.2<Rover.pitch<358.8) or (1.0<Rover.roll<358.9):
         x_world = np.zeros_like(x_world)
         y_world = np.zeros_like(y_world)
