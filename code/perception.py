@@ -33,9 +33,6 @@ def color_threshr(img, rgb_thresh=(160, 160, 160)):
     # Require that each pixel be above all three threshold values in RGB
     # above_thresh will now contain a boolean array with "True"
     # where threshold was met
-    #hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
-    #lower_blue = np.array([176,100,100])
-    #upper_blue = np.array([176,100,40])
     lower = np.array([100,100,0])
     upper = np.array([255,255,85])
     mask = cv2.inRange(img, lower, upper)
@@ -150,17 +147,8 @@ def perception_step(Rover):
     threshed, obst = color_thresh(warped, rgb_thresh)
     # 4) Update Rover.vision_image (this will be displayed on left side of screen)
     Rover.vision_image[:,:,0] = obst*255
-    #if not(1.5<Rover.pitch<358.5) or (0.9<Rover.roll<359.1):
     Rover.vision_image[:,:,2] = threshed*255
-##    else:
-##        Rover.vision_image[:,:,2] = np.zeros_like(Rover.vision_image[:,:,2])
     Rover.vision_image[:,:,1] = warpedrock
-   # Rover.vision_image[:,:,0] = obst
-    #Rover.vision_image[:,:,0] = threshed.astype(np.uint8)
-        # Example: Rover.vision_image[:,:,0] = obstacle color-thresholded binary image
-        #          Rover.vision_image[:,:,1] = rock_sample color-thresholded binary image
-        #          Rover.vision_image[:,:,2] = navigable terrain color-thresholded binary image
-    
     # 5) Convert map image pixel values to rover-centric coords
     #navigable terrain
     xpix, ypix = rover_coords(threshed)
@@ -171,17 +159,17 @@ def perception_step(Rover):
     print("ROver Coords =", xpixr)
     print("ROver Coords y=", ypixr)
     # 6) Convert rover-centric pixel values to world coordinates
-    #navigable
+    # navigable
     xpos, ypos = Rover.pos
     yaw = Rover.yaw
     y_world, x_world = pix_to_world(xpix, ypix, xpos, 
                                 ypos, yaw, 
                                 Rover.ground_truth.shape[0], 15)
-    #obstacles
+    # obstacles
     y_worldo, x_worldo = pix_to_world(xpixo, ypixo, xpos, 
                                 ypos, yaw, 
                                 Rover.ground_truth.shape[0], 15)
-    #rock
+    # rock
     y_worldr, x_worldr = pix_to_world(xpixr, ypixr, xpos, 
                                 ypos, yaw, 
                                 Rover.ground_truth.shape[0], 15)

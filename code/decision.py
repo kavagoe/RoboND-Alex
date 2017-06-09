@@ -13,6 +13,7 @@ def decision_step(Rover):
     # Example:
     # Check if we have vision data to make decisions with
     if Rover.mode == 'forward': #or not rock_world_pos[0].any() 
+        # simple logic to avoid getting stuck
         if (Rover.vel < 0.01 ) and (Rover.throttle>0.4 or Rover.throttle==-0.9) :
             Rover.throttle = -0.9
             Rover.brakes = 10
