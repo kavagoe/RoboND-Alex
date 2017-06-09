@@ -135,8 +135,9 @@ def create_output_images(Rover):
       buff = BytesIO()
       pil_img.save(buff, format="JPEG")
       encoded_string1 = base64.b64encode(buff.getvalue()).decode("utf-8")
+      vision=Rover.vision_image
+      pil_img = Image.fromarray(vision.astype(np.uint8))
       
-      pil_img = Image.fromarray(Rover.vision_image.astype(np.uint8))*255
       buff = BytesIO()
       pil_img.save(buff, format="JPEG")
       encoded_string2 = base64.b64encode(buff.getvalue()).decode("utf-8")

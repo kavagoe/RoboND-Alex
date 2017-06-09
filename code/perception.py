@@ -17,15 +17,15 @@ def color_thresh(img, rgb_thresh=(175, 175, 150)):
     above_thresh = (img[:,:,0] > rgb_thresh[0]) \
                 & (img[:,:,1] > rgb_thresh[1]) \
                 & (img[:,:,2] > rgb_thresh[2])
-    all_thresh = (img[:,:,0] >= 0) \
+    all_thresh = (img[:,:,0] > 0) \
                 & (img[:,:,1] >= 0) \
                 & (img[:,:,2] >= 0)
     obst = all_thresh-above_thresh
+    
     # Index the array of zeros with the boolean array and set to 1
     color_select[above_thresh] = 1
     color_select1[obst] = 1
     # Return the binary image
-    
     return color_select, color_select1
 def color_threshr(img, rgb_thresh=(160, 160, 160)):
     # Create an array of zeros same xy size as img, but single channel
@@ -129,18 +129,6 @@ def perception_step(Rover):
     x4 = 118
     y4 = 96
     
-##    if Rover.pitch>0.5:
-##        y3 = y3 - 20
-##        y4 = y4 - 20
-##    if Rover.pitch<359.5:
-##        y3 = y3 + 20
-##        y4 = y4 + 20
-##    if Rover.roll>0.9 and Rover.roll<1.5:
-##        x2 = x2 - 30
-##        x3 = x3 - 30
-##    if Rover.roll>357 and Rover.roll<359.9:
-##        x1 = x1 + 30
-##        x4 = x4 + 30
         
     source = np.float32([[x1, y1], [x2 ,y2],[x3,y3], [x4,y4]])
     destination = np.float32([[image.shape[1]/2 - dst_size, image.shape[0] - bottom_offset],
@@ -161,9 +149,9 @@ def perception_step(Rover):
     rgb_thresh=(160, 160, 160)    
     threshed, obst = color_thresh(warped, rgb_thresh)
     # 4) Update Rover.vision_image (this will be displayed on left side of screen)
-    Rover.vision_image[:,:,0] = obst
+    Rover.vision_image[:,:,0] = obst*255
     #if not(1.5<Rover.pitch<358.5) or (0.9<Rover.roll<359.1):
-    Rover.vision_image[:,:,2] = threshed
+    Rover.vision_image[:,:,2] = threshed*255
 ##    else:
 ##        Rover.vision_image[:,:,2] = np.zeros_like(Rover.vision_image[:,:,2])
     Rover.vision_image[:,:,1] = warpedrock

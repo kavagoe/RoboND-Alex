@@ -12,30 +12,8 @@ def decision_step(Rover):
 
     # Example:
     # Check if we have vision data to make decisions with
-    rock_world_pos = Rover.worldmap[:,:,1].nonzero()
-##    if Rover.near_sample == 0:
-##        Rover.send_pickup = False
-##        Rover.picking_up = 0
-##    
-##      if not Rover.nav_angles is None:
-##        print("rover mode", Rover.mode )
-##        if rock_world_pos[0].any():
-##            Rover.mode = 'rocks'
-        
-        
-        # Check for Rover.mode status
-##        if Rover.mode == 'rocks':
-##            if Rover.vel < Rover.max_vel:
-##                # Set throttle value to throttle setting
-##                Rover.throttle = Rover.throttle_set
-##            else: # Else coast
-##                Rover.throttle = 0
-##                Rover.brake = 0
-##                # Set steering to average angle clipped to the range +/- 15
-##                Rover.steer = np.clip(np.mean(Rover.nav_anglesr*2 * 180/np.pi), -15, 15)
-
     if Rover.mode == 'forward': #or not rock_world_pos[0].any() 
-        if (Rover.vel < 0.01 and Rover.vel>-0.01) and 0.4<Rover.throttle<0:
+        if (Rover.vel < 0.01 ) and (Rover.throttle>0.4 or Rover.throttle==-0.9) :
             Rover.throttle = -0.9
             Rover.brakes = 10
             Rover.throttle = 0
@@ -73,10 +51,7 @@ def decision_step(Rover):
 
         # If we're already in "stop" mode then make different decisions
     elif Rover.mode == 'stop':
-##            if rock_world_pos[0].any():
-##                print("sample visible", rock_world_pos[0].any() )
-##                Rover.mode = 'rocks'
-          
+                  
             # If we're in stop mode but still moving keep braking
         if Rover.vel > 0.2:
             Rover.throttle = 0
@@ -110,15 +85,7 @@ def decision_step(Rover):
                 # Set steer to mean angle
                 Rover.steer = np.clip(np.mean(Rover.nav_angles/2 * 180/np.pi), -15, 12)
                 Rover.mode = 'forward'
-##            if Rover.vel < 0.03  and Rover.throttle > 0.4 and (np.clip(np.mean(Rover.nav_angles * 180/np.pi), -15, 15) > -10 or np.clip(np.mean(Rover.nav_angles * 180/np.pi), -15, 15) < 10):
-##                Rover.throttle = 0
-##                
-##                if np.mean(Rover.nav_angles * 180/np.pi) > 180 :
-##                    Rover.steer = -15
-##                else:
-##                    Rover.steer = 15
-    # Just to make the rover do something 
-    # even if no modifications have been made to the code
+
         
     else:
         Rover.throttle = Rover.throttle_set

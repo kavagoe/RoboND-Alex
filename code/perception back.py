@@ -140,8 +140,8 @@ def perception_step(Rover):
     threshed, obst = color_thresh(warped, rgb_thresh)
     # 4) Update Rover.vision_image (this will be displayed on left side of screen)
     Rover.vision_image[:,:,0] = obst
-    Rover.vision_image[:,:,2] = threshed
-    Rover.vision_image[:,:,1] = warpedrock
+    Rover.vision_image[:,:,1] = threshed
+    Rover.vision_image[:,:,2] = warpedrock
     #Rover.vision_image[:,:,0] = threshed.astype(np.uint8)
         # Example: Rover.vision_image[:,:,0] = obstacle color-thresholded binary image
         #          Rover.vision_image[:,:,1] = rock_sample color-thresholded binary image
